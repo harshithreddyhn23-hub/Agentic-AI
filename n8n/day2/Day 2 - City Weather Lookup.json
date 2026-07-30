@@ -1,0 +1,113 @@
+{
+  "name": "Day 2 - City Weather Lookup",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "weather",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "d0ad516a-8be8-4022-ade7-cad36b342bcd",
+      "name": "Webhook",
+      "webhookId": "f15f017e-6ac4-445c-b189-98653413744a"
+    },
+    {
+      "parameters": {
+        "url": "https://geocoding-api.open-meteo.com/v1/search",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "name",
+              "value": "={{ $json.query.city }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "5df41bd0-2656-49ee-8d6b-7ca55cb6f3d7",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "url": "https://api.open-meteo.com/v1/forecast",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "latitude",
+              "value": "={{ $json.results[0].latitude }}"
+            },
+            {
+              "name": "longitude",
+              "value": "={{ $json.results[0].longitude }}"
+            },
+            {
+              "name": "current_weather",
+              "value": "true"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        416,
+        0
+      ],
+      "id": "3ab6d045-90fd-45b3-9329-e7aad0c1fd23",
+      "name": "HTTP Request1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "2a1a2cd1-4e38-48b4-bdd8-69a983dbb774",
+  "meta": {
+    "instanceId": "8e184caf5536202cb11d6bf9c36c0dd258ee2fa40dc553edeaac886429485735"
+  },
+  "nodeGroups": [],
+  "id": "xnvV6X002va7iAez",
+  "tags": []
+}
